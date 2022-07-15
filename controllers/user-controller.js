@@ -200,6 +200,7 @@ const userController = {
   },
   addFollowing: (req, res, next) => {
     const { userId } = req.params
+    if (Number(userId) === Number(req.user.id)) throw new Error('cannot follow yourself!')
     Promise.all([
       User.findByPk(userId),
       Followship.findOne({
