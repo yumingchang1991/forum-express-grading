@@ -12,19 +12,65 @@
     <a href="/users/{{user.id}}/edit" class="btn btn-primary">edit</a>
   </div>
 </div>
-<div>
-  <h2>
-    <span class="mx-2">{{#if restaurants}}{{restaurants.length}}{{else}}0{{/if}}</span>
-    已評論過餐廳
-  </h2>
-  {{#if restaurants}}
-  <div class="container d-flex flex-row justify-content-start align-items-center bg-white py-3">
-    {{#each restaurants}}
-    <a href="/restaurants/{{this.id}}">
-      <img src="{{this.image}}" class="rounded me-2" width="90" alt="it is a photo for restaurant {{this.name}}"
-    />
-    </a>
-    {{/each}}
+<div class="row">
+  <div class="col-4">
+    <div class="card my-2">
+      <div class="card-header fw-bold">
+        <span class='me-2'>{{#if followings}}{{followings.length}}{{else}}0{{/if}}</span>followings (追蹤者)
+      </div>
+      {{#if followings}}
+      <div class="card-body d-flex flex-row flex-wrap justify-content-start align-items-center">
+        {{#each followings}}
+        <a href="/users/{{this.id}}">
+          <img src="{{#if this.image}}{{this.image}}{{else}}https://via.placeholder.com/90.png?text={{this.name}}{{/if}}" class="rounded m-2" width="90" alt="it is a photo for user: {{this.name}}" />
+        </a>
+        {{/each}}
+      </div>
+      {{/if}}
+    </div>
+    <div class="card my-2">
+      <div class="card-header fw-bold">
+        <span class='me-2'>{{#if followers}}{{followers.length}}{{else}}0{{/if}}</span>followers (追隨者)
+      </div>
+      {{#if followers}}
+      <div class="card-body d-flex flex-row flex-wrap justify-content-start align-items-center">
+        {{#each followers}}
+        <a href="/users/{{this.id}}">
+          <img src="{{#if this.image}}{{this.image}}{{else}}https://via.placeholder.com/90.png?text={{this.name}}{{/if}}" class="rounded m-2" width="90" alt="it is a photo for user: {{this.name}}" />
+        </a>
+        {{/each}}
+      </div>
+      {{/if}}
+    </div>
   </div>
-  {{/if}}
+  <div class="col-8">
+    <div class="card my-2">
+      <div class="card-header fw-bold">
+        <span class='me-2'>{{#if restaurants}}{{restaurants.length}}{{else}}0{{/if}}</span>已評論餐廳
+      </div>
+      {{#if restaurants}}
+      <div class="card-body d-flex flex-row flex-wrap justify-content-start align-items-center">
+        {{#each restaurants}}
+        <a href="/restaurants/{{this.id}}">
+          <img src="{{this.image}}" class="rounded m-2" width="90" alt="it is a photo for restaurant {{this.name}}" />
+        </a>
+        {{/each}}
+      </div>
+      {{/if}}
+    </div>
+    <div class="card my-2">
+      <div class="card-header fw-bold">
+        <span class='me-2'>{{#if favoritedRestaurants}}{{favoritedRestaurants.length}}{{else}}0{{/if}}</span>收藏的餐廳
+      </div>
+      {{#if favoritedRestaurants}}
+      <div class="card-body d-flex flex-row flex-wrap justify-content-start align-items-center">
+        {{#each favoritedRestaurants}}
+        <a href="/restaurants/{{this.id}}">
+          <img src="{{this.image}}" class="rounded m-2" width="90" alt="it is a photo for restaurant {{this.name}}" />
+        </a>
+        {{/each}}
+      </div>
+      {{/if}}
+    </div>
+  </div>
 </div>

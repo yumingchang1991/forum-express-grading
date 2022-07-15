@@ -1,5 +1,5 @@
 const bcrypt = require('bcryptjs')
-const { User, Restaurant, Comment, Favorite, Like, Followship } = require('../models')
+const { sequelize, User, Restaurant, Comment, Favorite, Like, Followship } = require('../models')
 const { imgurFileHandler } = require('../helpers/file-helpers')
 
 const userController = {
@@ -37,7 +37,6 @@ const userController = {
     res.redirect('/signin')
   },
   getUser: async (req, res, next) => {
-    // if (Number(req.params.id) !== Number(req.user.id)) throw Error('User could only access their own profile')
     return Promise
       .all([
         Comment.findAll({
@@ -53,14 +52,22 @@ const userController = {
           nest: true,
           raw: true
         }),
-        User.findByPk(req.params.id)
+        User.findByPk(req.params.id),
+        // query followings
+        sequelize.query('SELECT `A`.`id`, `A`.`name`,`A`.`image` FROM users A WHERE`A`.`id` IN(SELECT `followships`.`following_id` FROM users B LEFT JOIN followships ON`B`.`id` = `followships`.`follower_id` WHERE`B`.`id` = ' + req.params.id + ') ORDER BY`A`.`id`;'),
+        // query followers
+        sequelize.query('SELECT `A`.`id`, `A`.`name`,`A`.`image` FROM users A WHERE`A`.`id` IN(SELECT `followships`.`follower_id` FROM users B LEFT JOIN followships ON`B`.`id` = `followships`.`following_id` WHERE`B`.`id` = ' + req.params.id + ') ORDER BY`A`.`id`;'),
+        // query favoritedRestaurants
+        sequelize.query('SELECT `restaurants`.`id`, `restaurants`.`image` FROM restaurants WHERE`restaurants`.`id` IN(SELECT `favorites`.`restaurant_id` FROM favorites WHERE`favorites`.`user_id` = ' + req.params.id + ') ORDER BY`restaurants`.`id`;')
       ])
-      .then(([comments, user]) => {
+      .then(([comments, user, [followings], [followers], [favoritedRestaurants]]) => {
         if (!user) throw new Error('User does not exist')
-        console.log('is res.render executed?')
         res.render('users/profile', {
           user: user.toJSON(),
-          restaurants: comments.map(item => item.Restaurant)
+          restaurants: comments.map(item => item.Restaurant),
+          followers,
+          followings,
+          favoritedRestaurants
         })
       })
       .catch(err => next(err))
