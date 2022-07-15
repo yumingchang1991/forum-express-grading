@@ -63,7 +63,7 @@ const userController = {
       .then(([comments, user, [followings], [followers], [favoritedRestaurants]]) => {
         if (!user) throw new Error('User does not exist')
         res.render('users/profile', {
-          user: user.toJSON(),
+          checkedUser: user.toJSON(),
           restaurants: comments.map(item => item.Restaurant),
           followers,
           followings,
