@@ -22,6 +22,7 @@ app.engine('handlebars', engine({ defaultLayout: 'main', helpers: handlebarsHelp
 app.set('view engine', 'handlebars')
 
 app.use(express.urlencoded({ extended: true }))
+app.use(express.json())
 app.use(session({ secret: SESSION_SECRET, resave: false, saveUninitialized: false }))
 app.use(passport.initialize())
 app.use(passport.session())
